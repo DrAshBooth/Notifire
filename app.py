@@ -3,12 +3,30 @@ from tornado.web import RequestHandler, Application
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
+from redis import Redis, RedisError
+
 import config
+import socket
+
+# Connect to Redis
+redis = Redis(host="redis", db=0,
+              socket_connect_timeout=2,
+              socket_timeout=2)
 
 
 class HelloHandler(RequestHandler):
     def get(self):
-        self.write("Hello, test")
+        try:
+            visits = redis.incr("counter")
+        except RedisError:
+            visits = "could not connect to Redis"
+
+        html = "<h3>Hello {name}!</h3>" \
+               "<b>Hostname:</b> {hostname}<br/>" \
+               "<b>Visits:</b> {visits}"
+        self.write(html.format(name="world",
+                               hostname=socket.gethostname(),
+                               visits=visits))
 
 
 class IndexPageHandler(RequestHandler):
