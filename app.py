@@ -9,9 +9,7 @@ import config
 import socket
 
 # Connect to Redis
-redis = Redis(host="redis", db=0,
-              socket_connect_timeout=2,
-              socket_timeout=2)
+redis = Redis(host="redis", port=6379)
 
 
 class HelloHandler(RequestHandler):

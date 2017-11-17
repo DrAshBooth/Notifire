@@ -6,7 +6,7 @@
         var ws;
 
         function onLoad() {
-            ws = new WebSocket("ws://localhost:4000/websocket");
+            ws = new WebSocket("ws://localhost:5050/websocket");
 
             ws.onmessage = function (e) {
                 alert(e.data);
