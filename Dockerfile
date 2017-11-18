@@ -17,4 +17,4 @@ EXPOSE 5050
 ENV NAME World
 
 # Run app.py when the container launches
-CMD ["python", "app.py"]
+CMD ["python", "notifire/app.py"]

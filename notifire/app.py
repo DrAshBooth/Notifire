@@ -1,15 +1,19 @@
-from tornado.websocket import WebSocketHandler
-from tornado.web import RequestHandler, Application
+import os
+import socket
+
+from pymongo import MongoClient
+from redis import Redis, RedisError
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
+from tornado.web import RequestHandler, Application
+from tornado.websocket import WebSocketHandler
 
-from redis import Redis, RedisError
-
-import config
-import socket
+from config import TEMPLATE_PATH
 
 # Connect to Redis
 redis = Redis(host="redis", port=6379)
+mongo_client = MongoClient()
+notifire_db = mongo_client.notifire_db
 
 
 class HelloHandler(RequestHandler):
@@ -50,12 +54,13 @@ def make_app():
         (r'/websocket', MyWsHandler)
     ]
     settings = {
-        'template_path': config.TEMPLATE_PATH
+        'template_path': TEMPLATE_PATH
     }
     return Application(
         handlers,
         **settings
     )
+
 
 if __name__ == "__main__":
     app = make_app()

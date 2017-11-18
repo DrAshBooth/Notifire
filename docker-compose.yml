@@ -6,5 +6,9 @@ services:
       - "5050:80"
     volumes:
       - .:/code
+    links:
+    - db
+  db:
+    image: mongo:3.0.2
   redis:
     image: "redis"
