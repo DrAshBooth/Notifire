@@ -1,7 +1,6 @@
-import os
 import socket
+import json
 
-from pymongo import MongoClient
 from redis import Redis, RedisError
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -9,11 +8,12 @@ from tornado.web import RequestHandler, Application
 from tornado.websocket import WebSocketHandler
 
 from config import TEMPLATE_PATH
+from data import DataService
+
 
 # Connect to Redis
 redis = Redis(host="redis", port=6379)
-mongo_client = MongoClient()
-notifire_db = mongo_client.notifire_db
+ds = DataService()
 
 
 class HelloHandler(RequestHandler):
@@ -29,6 +29,13 @@ class HelloHandler(RequestHandler):
         self.write(html.format(name="world",
                                hostname=socket.gethostname(),
                                visits=visits))
+
+
+class UserHandler(RequestHandler):
+    def get(self):
+        _users = ds.get_users()
+        users = [str(type(u)) for u in _users]
+        self.render("users.html", users=users)
 
 
 class IndexPageHandler(RequestHandler):
@@ -51,7 +58,8 @@ def make_app():
     handlers = [
         (r'/hello', HelloHandler),
         (r'/', IndexPageHandler),
-        (r'/websocket', MyWsHandler)
+        (r'/websocket', MyWsHandler),
+        (r'/users', UserHandler)
     ]
     settings = {
         'template_path': TEMPLATE_PATH
@@ -65,5 +73,5 @@ def make_app():
 if __name__ == "__main__":
     app = make_app()
     server = HTTPServer(app)
-    server.listen(80)
+    server.listen(5050)
     IOLoop.instance().start()

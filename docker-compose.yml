@@ -1,14 +1,20 @@
 version: "3"
 services:
-  web:
-    build: .
-    ports:
-      - "5050:80"
-    volumes:
-      - .:/code
-    links:
-    - db
-  db:
+  mongodb:
     image: mongo:3.0.2
+    ports:
+      - "27017:27017"
   redis:
     image: "redis"
+  web:
+    build: ./notifire
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./notifire:/code
+    links:
+    - mongodb
+  mongo-seed:
+    build: ./mongo-seed
+    links:
+      - mongodb

@@ -1,10 +1,10 @@
 # Use an official Python runtime as a parent type
 FROM python:3.6
 
-# Set the working directory to /app
+# Set the working directory to /code
 WORKDIR /code
 
-# Copy the current directory contents into the container at /app
+# Copy the current directory contents into the container at /code
 ADD . /code
 
 # Install any needed packages specified in requirements.txt
@@ -17,4 +17,4 @@ EXPOSE 5050
 ENV NAME World
 
 # Run app.py when the container launches
-CMD ["python", "notifire/app.py"]
+CMD ["python", "./notifire_web/app.py"]
