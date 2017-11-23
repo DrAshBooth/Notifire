@@ -16,5 +16,8 @@ EXPOSE 5050
 # Define environment variable
 ENV NAME World
 
+ENV PATH=$PATH:/notifire_web
+ENV PYTHONPATH /notifire_web
+
 # Run app.py when the container launches
 CMD ["python", "./notifire_web/app.py"]

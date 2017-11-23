@@ -6,12 +6,17 @@ services:
       - "27017:27017"
   redis:
     image: "redis"
+#  rabbitmq:
+#    image: rabbitmq:management
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
   web:
-    build: ./notifire
+    build: ./web
     ports:
       - "5050:5050"
     volumes:
-      - ./notifire:/code
+      - ./web:/code
     links:
     - mongodb
   mongo-seed:
