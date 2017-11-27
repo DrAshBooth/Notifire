@@ -19,7 +19,11 @@
     </script>
 </head>
 <body onload="onLoad();">
+    <h3>Hello {{name}}!</h3>
+    <b>Hostname:</b> {{hostname}}<br/>
+    <b>Visits:</b> {{visits}}
+    <hr/>
     <strong>Message to Send:</strong>&nbsp;<input type="text" id="msg" maxlength="25" />
-    &nbsp;<input type="button" onclick="sendMessage();" value="Send" />
+    <input type="button" onclick="sendMessage();" value="Send" />
 </body>
 </html>

@@ -33,7 +33,7 @@ class AuthLoginHandler(BaseHandler):
             error_message = self.get_argument("error")
         except:
             error_message = ""
-        self.render("login.html", errormessage = error_message)
+        self.render("login.html", errormessage=error_message)
 
     def check_permission(self, username, password):
         if username == "admin" and password == "admin":
@@ -58,35 +58,24 @@ class AuthLoginHandler(BaseHandler):
             self.redirect(u"/auth/login/" + error_message)
 
 
-class HelloHandler(RequestHandler):
-    @authenticated
-    def get(self):
-        try:
-            visits = redis.incr("counter")
-        except RedisError:
-            visits = "could not connect to Redis"
-
-        html = "<h3>Hello {name}!</h3>" \
-               "<b>Hostname:</b> {hostname}<br/>" \
-               "<b>Visits:</b> {visits}"
-
-        # user = xhtml_escape(self.current_user)
-
-        self.write(html.format(name="World",
-                               hostname=socket.gethostname(),
-                               visits=visits))
-
-
-class UserHandler(RequestHandler):
+class UserHandler(BaseHandler):
     def get(self):
         _users = ds.get_users()
         users = [str(u) for u in _users]
         self.render("users.html", users=users)
 
 
-class IndexPageHandler(RequestHandler):
+class IndexPageHandler(BaseHandler):
+    @authenticated
     def get(self):
-        self.render("index.html")
+        try:
+            visits = redis.incr("counter")
+        except RedisError:
+            visits = "could not connect to Redis"
+        self.render("index.html",
+                    name="World!",
+                    hostname=socket.gethostname(),
+                    visits=visits)
 
 
 class MyWsHandler(WebSocketHandler):
@@ -102,7 +91,6 @@ class MyWsHandler(WebSocketHandler):
 
 def make_app():
     handlers = [
-        (r'/hello', HelloHandler),
         (r'/', IndexPageHandler),
         (r"/auth/login/", AuthLoginHandler),
         (r'/websocket', MyWsHandler),
