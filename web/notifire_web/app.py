@@ -36,7 +36,8 @@ class AuthLoginHandler(BaseHandler):
         self.render("login.html", errormessage=error_message)
 
     def check_permission(self, username, password):
-        if username == "admin" and password == "admin":
+        user = ds.get_user(username)
+        if user and user.check_password(password):
             return True
         return False
 
